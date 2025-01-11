@@ -1,0 +1,76 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+ 
+
+```{r}
+library(readr)
+
+conduct <- read_csv("C:/Users/laira/Downloads/RChem Results - RSM (3).csv")
+
+#head(conduct)
+
+library(rsm)
+
+con_data <- coded.data(conduct,formulas = list(x1 ~ (Sulfuric_Acid_M - 0.2)/0.115470041, x2 ~(Urea_g - 0.3)/0.1732050615137776, x3 ~ (Citric_Acid_g - 0.3)/0.1732050615137776))
+
+#head(con_data)
+
+
+cond_model <- rsm(`Conductivity (Microsiemens per centimeter)` ~SO(x1, x2, x3), data = con_data)
+
+cond_model
+
+summary(cond_model)
+```
+```{r}
+par(mfrow = c(2,3))       # 2 x 3 pictures on one plot
+persp(
+  cond_model,            # Our model 
+  ~ x1 + x2 + x3,    
+  col = topo.colors(100), # Color palette
+  contours = "colors"     # Include contours with the same color palette
+) 
+```
+```{r}
+wave_model <- rsm(`Max Emission Wavelength Ex @ 400nm` ~SO(x1, x2, x3), data = con_data)
+
+wave_model
+
+summary(wave_model)
+```
+
+```{r}
+par(mfrow = c(2,3))       # 2 x 3 pictures on one plot
+persp(
+  wave_model,            # Our model 
+  ~ x1 + x2 + x3,    
+  col = topo.colors(100), # Color palette
+  contours = "colors"     # Include contours with the same color palette
+) 
+```
+#Biofilm Inhibition
+
+```{r}
+
+film_model <- rsm(`Biofilm Inhibition (%)` ~SO(x1, x2, x3), data = con_data)
+
+film_model
+
+summary(film_model)
+
+```
+
+```{r}
+par(mfrow = c(2,3))       # 2 x 3 pictures on one plot
+persp(
+  film_model,            # Our model 
+  ~ x1 + x2 + x3,    
+  col = topo.colors(100), # Color palette
+  contours = "colors"     # Include contours with the same color palette
+) 
+```
+
+
